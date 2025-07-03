@@ -9,7 +9,7 @@ function App(){
  return (
     <div>
       <nav>
-        <Link to="/">Home</Link> | <Link to="/add">Add Product</Link> /*Holds all links for page switching */
+        <Link to="/">Home</Link> | <Link to="/add">Add Product</Link> 
       </nav>
 
       <Routes> /* Routes render all components based on the url */
