@@ -11,6 +11,12 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [imageError, setImageError] = useState({});
+  
+  // Handle image loading errors
+  const handleImageError = (index) => {
+    setImageError(prev => ({ ...prev, [index]: true }));
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -58,14 +64,38 @@ const ProductDetails = () => {
       <div className="product-details-card">
         <div className="product-images">
           <div className="main-image">
-            <img src={product.thumbnail} alt={product.title} className="img-fluid" />
+            {product.thumbnail && !imageError['main'] ? (
+              <img 
+                src={product.thumbnail} 
+                alt={product.title} 
+                className="img-fluid"
+                onError={() => handleImageError('main')}
+              />
+            ) : (
+              <div className="image-placeholder">
+                <span>No Image Available</span>
+              </div>
+            )}
           </div>
           <div className="thumbnail-container">
             {product.images && product.images.slice(0, 4).map((image, index) => (
               <div key={index} className="thumbnail">
-                <img src={image} alt={`${product.title} ${index + 1}`} />
+                {!imageError[index] ? (
+                  <img 
+                    src={image} 
+                    alt={`${product.title} ${index + 1}`} 
+                    onError={() => handleImageError(index)}
+                  />
+                ) : (
+                  <div className="thumbnail-placeholder">
+                    <span>Image {index + 1}</span>
+                  </div>
+                )}
               </div>
             ))}
+            {(!product.images || product.images.length === 0) && (
+              <div className="no-thumbnails">No additional images</div>
+            )}
           </div>
         </div>
         

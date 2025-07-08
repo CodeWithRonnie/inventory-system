@@ -40,11 +40,22 @@ export const ProductProvider = ({ children }) => {
   const getProduct = async (id) => {
     try {
       setLoading(true);
-      // Find product in local state
-      const product = products.find(p => p.id.toString() === id.toString());
+      console.log('Looking for product with ID:', id, 'Type:', typeof id);
+      console.log('Available products:', products);
+      
+      // Convert both IDs to strings for comparison to avoid type issues
+      const product = products.find(p => String(p.id) === String(id));
+      
       if (!product) {
+        console.error('Product not found with ID:', id);
         throw new Error('Product not found');
       }
+      
+      // Ensure product has required image properties
+      if (!product.thumbnail && product.images && product.images.length > 0) {
+        product.thumbnail = product.images[0];
+      }
+      
       return product;
     } catch (err) {
       console.error('Error getting product:', err);
