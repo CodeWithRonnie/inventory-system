@@ -3,17 +3,7 @@ import { FiChevronRight } from 'react-icons/fi';
 import { useEffect, useRef, useState } from 'react';
 import '../styles/CategoryNav.css';
 
-const categories = [
-  { id: 'gadgets', name: 'Gadgets/Devices' },
-  { id: 'home-decor', name: 'Home Decor' },
-  { id: 'skincare', name: 'Skincare' },
-  { id: 'groceries', name: 'Groceries' },
-  { id: 'women', name: 'Women' },
-  { id: 'men', name: 'Men' },
-  { id: 'furniture', name: 'Furniture' }
-];
-
-const CategoryNav = ({ currentCategory }) => {
+const CategoryNav = ({ categories = [], currentCategory }) => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [showScrollLeft, setShowScrollLeft] = useState(false);
@@ -67,25 +57,20 @@ const CategoryNav = ({ currentCategory }) => {
         ref={scrollContainerRef}
       >
         <div className="category-list">
-          <NavLink 
-            to="/products" 
-            className={({ isActive }) => `category-link ${isActive ? 'active' : ''}`}
-            end
-          >
-            All Products
-            <span className="category-count">
-              {categories.reduce((acc, cat) => acc + cat.count, 0)}
-            </span>
-          </NavLink>
-          
-          {categories.map(category => (
+          {categories.map((cat) => (
             <NavLink
-              key={category.id}
-              to={`/products/category/${category.id}`}
-              className={({ isActive }) => `category-link ${isActive ? 'active' : ''}`}
+              key={cat.id}
+              to={cat.id === 'all' ? '/' : `/products/category/${cat.id}`}
+              className={({ isActive }) => 
+                `category-link ${isActive || currentCategory === cat.id ? 'active' : ''}`
+              }
             >
-              {category.name}
-              <span className="category-count">{category.count || 0}</span>
+              {cat.name}
+              {typeof cat.count === 'number' && (
+                <span className="category-count">
+                  ({cat.count})
+                </span>
+              )}
             </NavLink>
           ))}
         </div>

@@ -41,7 +41,7 @@ const ProductsList = () => {
   };
 
   // Map category IDs to display names and count products per category
-  const { categoryMap, categoriesWithCounts } = useMemo(() => {
+  const { categoryMap, categoriesWithCounts, totalProducts } = useMemo(() => {
     const categoryMap = {
       'gadgets': 'Gadgets/Devices',
       'home-decor': 'Home Decor',
@@ -53,9 +53,14 @@ const ProductsList = () => {
     };
     
     const counts = {};
-    products.forEach(product => {
-      counts[product.category] = (counts[product.category] || 0) + 1;
-    });
+    // Only count products that have a valid category
+    if (Array.isArray(products)) {
+      products.forEach(product => {
+        if (product && product.category) {
+          counts[product.category] = (counts[product.category] || 0) + 1;
+        }
+      });
+    }
     
     const categoriesWithCounts = Object.entries(categoryMap).map(([id, name]) => ({
       id,
@@ -63,7 +68,11 @@ const ProductsList = () => {
       count: counts[id] || 0
     }));
 
-    return { categoryMap, categoriesWithCounts };
+    return { 
+      categoryMap, 
+      categoriesWithCounts, 
+      totalProducts: Array.isArray(products) ? products.length : 0 
+    };
   }, [products]);
 
   // Filter products based on search term and category
@@ -201,7 +210,13 @@ const ProductsList = () => {
         </div>
 
         {/* Category Navigation - Pass categories with counts */}
-        <CategoryNav categories={categoriesWithCounts} currentCategory={category} />
+        <CategoryNav 
+          categories={[
+            { id: 'all', name: 'All Products', count: totalProducts },
+            ...categoriesWithCounts
+          ]} 
+          currentCategory={category} 
+        />
         
         {filteredProducts.length === 0 ? (
           <div className="no-results">
