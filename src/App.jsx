@@ -68,7 +68,7 @@ function App() {
                 <ProductDetails />
               </ErrorBoundary>
             } />
-            <Route path="/products/:id/edit" element={
+            <Route path="/products/edit/:id" element={
               <ErrorBoundary>
                 <EditProduct />
               </ErrorBoundary>

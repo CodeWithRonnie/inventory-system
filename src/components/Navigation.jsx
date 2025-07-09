@@ -16,7 +16,6 @@ const Navigation = () => {
       <div className="container">
         <nav className="main-nav">
           <Link to="/" className="logo">
-            <span className="logo-icon">📦</span>
             <span className="logo-text">inventory.com</span>
           </Link>
           
